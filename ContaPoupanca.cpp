@@ -1,9 +1,10 @@
-
 #include "ContaPoupanca.h"
 
-ContaPoupanca::ContaPoupanca(int numeroConta) : Conta(numeroConta) {}
+// Construtor da classe ContaPoupanca
+ContaPoupanca::ContaPoupanca(const std::string& numero, double saldoInicial, double taxaJuros)
+        : Conta(numero, saldoInicial), taxaJuros(taxaJuros) {}
 
-void ContaPoupanca::aplicarJuros(double taxa) {
-    saldo += saldo * taxa;
-    adicionarTransacao(Transacao("Juros", saldo * taxa));
+// Método para aplicar juros
+void ContaPoupanca::aplicarJuros() {
+    saldo += saldo * taxaJuros; // Aplica a taxa de juros ao saldo
 }

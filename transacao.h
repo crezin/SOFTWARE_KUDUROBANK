@@ -1,20 +1,20 @@
-#ifndef TRANSACAOBANCARIA_H
-#define TRANSACAOBANCARIA_H
+#ifndef TRANSACAO_H
+#define TRANSACAO_H
 
 #include <string>
-#include <ctime>
 
 class Transacao {
 private:
-    std::string tipo;
-    double valor;
-    std::time_t data;
+    std::string tipo; // Tipo de transação (depósito ou saque)
+    double valor;     // Valor da transação
 
 public:
+    // Construtor
     Transacao(const std::string& tipo, double valor);
+
+    // Métodos get
     std::string getTipo() const;
     double getValor() const;
-    std::time_t getData() const;
 };
 
 #endif // TRANSACAO_H

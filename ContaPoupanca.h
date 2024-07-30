@@ -4,9 +4,15 @@
 #include "Conta.h"
 
 class ContaPoupanca : public Conta {
+private:
+    double taxaJuros; // Taxa de juros da conta poupança
+
 public:
-    ContaPoupanca(int numeroConta);
-    void aplicarJuros(double taxa);
+    // Construtor
+    ContaPoupanca(const std::string& numero, double saldoInicial, double taxaJuros);
+
+    // Método para aplicar juros
+    void aplicarJuros();
 };
 
 #endif // CONTAPOUPANCA_H

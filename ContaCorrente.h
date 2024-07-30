@@ -5,10 +5,13 @@
 
 class ContaCorrente : public Conta {
 private:
-    double limiteChequeEspecial;
+    double limite; // Limite da conta corrente
 
 public:
-    ContaCorrente(int numeroConta, double limite);
+    // Construtor
+    ContaCorrente(const std::string& numero, double saldoInicial, double limite);
+
+    // Sobrescreve o método sacar
     bool sacar(double valor) override;
 };
 

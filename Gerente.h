@@ -2,23 +2,21 @@
 #define GERENTE_H
 
 #include <string>
-#include <cstdlib>
-#include <ctime>
 
 class Gerente {
 private:
-    std::string nome;
-    std::string senha;
-    std::string token;
-
-    std::string gerarToken();
+    std::string nome;    // Nome do gerente
+    std::string senha;   // Senha do gerente
 
 public:
+    // Construtor que armazena nome e senha
     Gerente(const std::string& nome, const std::string& senha);
+
+    // Método para obter o nome do gerente
     std::string getNome() const;
-    std::string getToken() const;
+
+    // Método para validar a senha do gerente
     bool validarSenha(const std::string& senhaTentativa) const;
-    void cadastrarGerente(const std::string& nome, const std::string& senha);
 };
 
 #endif // GERENTE_H

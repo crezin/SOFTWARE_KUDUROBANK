@@ -1,16 +1,13 @@
 #include <iostream>
 #include "Cliente.h"
-#include "ContaCorrente.h"
-#include "ContaPoupanca.h"
+#include "Gerente.h"
+
+using namespace std;
 
 int main() {
-    // Inicializando um cliente com informações fictícias
-    Cliente cliente("João Silva", "123.456.789-00", "Rua A, 123", "(11) 98765-4321", "senha123");
+    // criar um construtor apenas para o gerente para q possa ser apenas o cara da TI possa cadastrar o gerente
 
-    // Inicia o menu do gerente
-    cliente.mostrarOpcaoGerente();
-    // Inicia o menu do cliente
-    cliente.mostrarOpcaoUsuario();
+    //puxa as opcao do gerente e usuario
 
     return 0;
 }
