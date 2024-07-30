@@ -1,21 +1,27 @@
 #ifndef CONTA_H
 #define CONTA_H
 
+#include <string>
 #include <vector>
-#include "transacao.h"
+#include "Transacao.h" // Inclui a classe Transacao
 
 class Conta {
 protected:
-    int numeroConta;
-    double saldo;
-    std::vector<Transacao> transacoes;
+    std::string numeroConta; // Número da conta
+    double saldo;            // Saldo da conta
+    std::vector<Transacao> transacoes; // Histórico de transações
 
 public:
-    Conta(int numeroConta);
-    virtual ~Conta() {}
+    // Construtor
+    Conta(const std::string& numero, double saldoInicial);
+
+    // Métodos para acessar e modificar o saldo
     virtual void depositar(double valor);
     virtual bool sacar(double valor);
     double getSaldo() const;
+    std::string getNumeroConta() const;
+
+    // Método para adicionar transação
     void adicionarTransacao(const Transacao& transacao);
 };
 

@@ -1,13 +1,14 @@
 #include "ContaCorrente.h"
 
-ContaCorrente::ContaCorrente(int numeroConta, double limite)
-        : Conta(numeroConta), limiteChequeEspecial(limite) {}
+// Construtor da classe ContaCorrente
+ContaCorrente::ContaCorrente(const std::string& numero, double saldoInicial, double limite)
+        : Conta(numero, saldoInicial), limite(limite) {}
 
+// Sobrescreve o método sacar
 bool ContaCorrente::sacar(double valor) {
-    if (valor <= (saldo + limiteChequeEspecial)) {
-        saldo -= valor;
-        adicionarTransacao(Transacao("Saque", valor));
-        return true;
+    if (valor <= (saldo + limite)) {
+        saldo -= valor; // Subtrai valor do saldo
+        return true;    // Saque bem-sucedido
     }
-    return false;
+    return false; // Saldo insuficiente
 }
