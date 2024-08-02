@@ -11,7 +11,7 @@ private:
     std::time_t data;
 
 public:
-    Transacao(const std::string& tipo, double valor);
+    Transacao(const std::string& tipo, double valor, time_t data);
     std::string getTipo() const;
     double getValor() const;
     std::time_t getData() const;

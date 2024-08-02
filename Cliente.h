@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include "Conta.h"
-#include "Gerente.h"
+
 
 class Cliente {
 private:
@@ -14,7 +14,7 @@ private:
     std::string numeroTelefone;
     std::string senha; // Armazena a senha
     std::vector<Conta*> contas;
-    Gerente* gerente;
+    
 
 public:
     // Adicionando a senha ao construtor
@@ -36,13 +36,15 @@ public:
 
     // Métodos adicionais
     void adicionarConta(Conta* conta);
-    std::vector<Conta*> getContas() const;
-    bool validarSenha(const std::string& senhaTentativa) const;
+    void mostrarMenu();
+    bool autenticarCliente(const std::string& numeroTelefone, const std::string& senha) {
+	void operarConta(Conta* conta);
+	void selecionarContaEOperar(Cliente& cliente);
+}
 
-    void mostrarOpcaoGerente();
-    void mostrarOpcaoUsuario();
-    void cadastrarGerente(const std::string& nome, const std::string& senha);
-    void cadastrarCliente(const std::string& nome, const std::string& cpf, const std::string& endereco, const std::string& numeroTelefone, const std::string& senha);
+
 };
+
+
 
 #endif // CLIENTE_H

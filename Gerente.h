@@ -1,24 +1,31 @@
 #ifndef GERENTE_H
 #define GERENTE_H
 
-#include <string>
-#include <cstdlib>
-#include <ctime>
+#include <map>
+#include "Cliente.h"
 
-class Gerente {
+using namespace std;
+
+class Gerente : public Cliente {
 private:
-    std::string nome;
-    std::string senha;
-    std::string token;
-
-    std::string gerarToken();
+    private:
+    std::map<std::string, Cliente>& clientes;
+    int proximoNumeroConta;
 
 public:
-    Gerente(const std::string& nome, const std::string& senha);
-    std::string getNome() const;
-    std::string getToken() const;
-    bool validarSenha(const std::string& senhaTentativa) const;
-    void cadastrarGerente(const std::string& nome, const std::string& senha);
+    Gerente(std::map<std::string, Cliente>& clientes);
+    void cadastrarCliente(const std::string& nome, const std::string& cpf, const std::string& endereco, const std::string& numeroTelefone, const std::string& senha) {
+	void abrirContaCorrente(const std::string& numeroTelefone, double saldoInicial, double limiteChequeEspecial);
+	void abrirContaPoupanca(const std::string& numeroTelefone, double saldoInicial, double taxaJuros);
+	bool autenticarGerente(const std::string& senha);
+	void operarComoGerente();
+	void mostrarMenuGerente();
+	
+	
+	}
 };
+
+
+
 
 #endif // GERENTE_H
