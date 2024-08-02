@@ -4,15 +4,16 @@
 
 using namespace std;
 
-Cliente::Cliente(const std::string &nome, const std::string &cpf, const std::string &endereco,
-                 const std::string &numeroTelefone, const std::string &senha): nome(nome), cpf(cpf), endereco(endereco), numeroTelefone(numeroTelefone), senha(senha), gerente(nullptr) {}
+Cliente::Cliente(const std::string& nome, const std::string& cpf, const std::string& endereco, const std::string& numeroTelefone, const std::string& senha)
+        : nome(nome), cpf(cpf), endereco(endereco), numeroTelefone(numeroTelefone), senha(senha) {}
 
 Cliente::~Cliente() {
     for (auto conta : contas) {
         delete conta; // Libera a memória das contas
     }
-    delete gerente; // Libera a memória do gerente
 }
+    
+
 
 // Métodos set
 void Cliente::setNome(const string& nome) {
@@ -56,30 +57,18 @@ string Cliente::getSenha() const {
     return senha;
 }
 
-// Método para validar a senha
-bool Cliente::validarSenha(const string& senhaTentativa) const {
-    return senha == senhaTentativa;
+// Método para validar a senha	
+bool autenticarCliente(const std::string& numeroTelefone, const std::string& senha) {
+    if (clientes.find(numeroTelefone) != clientes.end() && clientes[numeroTelefone].senha == senha) {
+        return true;
+    }
+    return false;
 }
 
 // Métodos adicionais
-void Cliente::adicionarConta(Conta* conta) {
-    contas.push_back(conta);
-}
-
-vector<Conta*> Cliente::getContas() const {
-    return contas;
-}
-
-void Cliente::mostrarOpcaoGerente() {
-    // Código anterior para gerenciar opções do gerente
-}
-
-void Cliente::cadastrarGerente(const string& nome, const string& senha) {
-    if (gerente != nullptr) {
-        delete gerente; // Libera a memória se já houver um gerente
+void adicionarConta(Conta* conta) {
+        contas.push_back(conta);
     }
-    gerente = new Gerente(nome, senha); // Cria um novo gerente
-}
 
 // Método para cadastrar cliente
 void Cliente::cadastrarCliente(const string& nome, const string& cpf, const string& endereco, const string& numeroTelefone, const string& senha) {
@@ -90,61 +79,88 @@ void Cliente::cadastrarCliente(const string& nome, const string& cpf, const stri
     this->senha = senha; // Armazena a senha
 }
 
-void Cliente::mostrarOpcaoUsuario() {
+void operarConta(Conta* conta) {
     int opcao;
-    cout << "  _   _   _   _   _   _   _   _   _   _  \n"
-            " / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ / \\ \n"
-            "( k | u | d | u | r | o |   b | a | n | k )\n"
-            " \\_/ \\_/ \\_/ \\_/ \\_/ \\_/ \\_/ \\_/ \\_/ \\_/ " << endl;
-    cout << "BEM VINDO AO MÓDULO DO CLIENTE!!!!\n";
-    cout << "1. Cadastrar\n";
-    cout << "2. Fazer login\n";
-    cout << "3. Retirar extrato bancário\n";
-    cout << "4. Sair\n";
-    cin >> opcao;
+    do {
+        mostrarMenu();
+        std::cout << "Escolha uma opcao: ";
+        std::cin >> opcao;
 
-    switch (opcao) {
-        case 1: {
-            string nome, cpf, endereco, numeroTelefone, senha;
-            cout << "Digite seu nome: ";
-            cin.ignore(); // Limpa o buffer
-            getline(cin, nome);
-            cout << "Digite seu CPF: ";
-            cin >> cpf;
-            cout << "Digite seu endereço: ";
-            cin.ignore(); // Limpa o buffer
-            getline(cin, endereco);
-            cout << "Digite seu número de telefone: ";
-            cin >> numeroTelefone;
-            cout << "Digite sua senha: ";
-            cin >> senha;
+        switch (opcao) {
+            case 1: {
+                double valor;
+                std::string dataStr;
+                std::cout << "Digite o valor do deposito: ";
+                std::cin >> valor;
+                std::cout << "Digite a data (DD/MM/AAAA): ";
+                std::cin >> dataStr;
 
-            // Método para cadastrar o cliente
-            cadastrarCliente(nome, cpf, endereco, numeroTelefone, senha);
-            cout << "Cadastro realizado com sucesso!" << endl;
-            return(mostrarOpcaoUsuario());
-        }
-        case 2: {
-            string senhaTentativa;
-            cout << "Digite sua senha: ";
-            cin >> senhaTentativa;
+                std::tm tm = {};
+                std::istringstream ss(dataStr);
+                ss >> std::get_time(&tm, "%d/%m/%Y");
+                time_t data = std::mktime(&tm);
 
-            if (validarSenha(senhaTentativa)) {
-                cout << "Login realizado com sucesso!" << endl;
-                // Aqui você pode adicionar a lógica para acessar a conta do cliente
-            } else {
-                cout << "Senha incorreta!" << endl;
+                conta->depositar(valor, data);
+                break;
             }
-            break;
+            case 2: {
+                double valor;
+                std::string dataStr;
+                std::cout << "Digite o valor do saque: ";
+                std::cin >> valor;
+                std::cout << "Digite a data (DD/MM/AAAA): ";
+                std::cin >> dataStr;
+
+                std::tm tm = {};
+                std::istringstream ss(dataStr);
+                ss >> std::get_time(&tm, "%d/%m/%Y");
+                time_t data = std::mktime(&tm);
+
+                conta->sacar(valor, data);
+                break;
+            }
+            case 3: {
+                std::cout << "Saldo atual: R$ " << conta->getSaldo() << "\n";
+                break;
+            }
+            case 4: {
+                conta->mostrarTransacoes();
+                break;
+            }
+            case 5: {
+                ContaPoupanca* cp = dynamic_cast<ContaPoupanca*>(conta);
+                if (cp) {
+                    cp->aplicarJuros();
+                } else {
+                    std::cout << "Aplicar juros s� est� dispon�vel para contas poupan�a.\n";
+                }
+                break;
+            }
+            case 6: {
+                std::cout << "Saindo...\n";
+                break;
+            }
+            default: {
+                std::cout << "Opcao invalida. Tente novamente.\n";
+                break;
+            }
         }
-        case 3:
-            cout << "Retirando extrato bancário..." << endl;
-            // Aqui você pode implementar a lógica para mostrar o extrato
-            break;
-        case 4:
-            cout << "Saindo." << endl;
-            break;
-        default:
-            cout << "Opção inválida. Tente novamente." << endl;
+    } while (opcao != 6);
+}
+
+void selecionarContaEOperar(Cliente& cliente) {
+    std::cout << "Contas disponiveis:\n";
+    for (size_t i = 0; i < cliente.contas.size(); ++i) {
+        std::cout << i + 1 << ". Numero da conta: " << cliente.contas[i]->getNumeroConta() << "\n";
+    }
+    int opcao;
+    std::cout << "Escolha o numero da conta para operar: ";
+    std::cin >> opcao;
+
+    if (opcao > 0 && opcao <= cliente.contas.size()) {
+        operarConta(cliente.contas[opcao - 1]);
+    } else {
+        std::cout << "Opcao invalida.\n";
     }
 }
+

@@ -1,29 +1,19 @@
-# Regra principal
-app: main.o Cliente.o conta.o ContaCorrente.o ContaPoupanca.o transacao.o Gerente.o
-	g++ main.o Cliente.o conta.o ContaCorrente.o ContaPoupanca.o transacao.o Gerente.o -o main
+CXX = g++
+CXXFLAGS = -std=c++11 -Wall
+INCLUDE = -Iinclude
+SRC = src/main.cpp src/Transacao.cpp src/Conta.cpp src/ContaCorrente.cpp src/ContaPoupanca.cpp src/Cliente.cpp src/Gerente.cpp
+OBJ = $(SRC:.cpp=.o)
+BIN = bin/programa
 
-# Regras para compilar os arquivos objeto
-main.o: main.cpp
-	g++  main.cpp -c
+all: $(BIN)
 
-Cliente.o: Cliente.cpp
-	g++  Cliente.cpp -c
+$(BIN): $(OBJ)
+	$(CXX) $(CXXFLAGS) $(OBJ) -o $(BIN)
 
-conta.o: conta.cpp
-	g++  conta.cpp -c
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
 
-ContaCorrente.o: ContaCorrente.cpp
-	g++  ContaCorrente.cpp -c
+clean:
+	rm -f $(OBJ) $(BIN)
 
-ContaPoupanca.o: ContaPoupanca.cpp
-	g++  ContaPoupanca.cpp -c
-
-transacao.o: transacao.cpp
-	g++  transacao.cpp -c
-
-Gerente.o: Gerente.cpp
-	g++  Gerente.cpp -c
-
-# Limpeza
-#clean:
-#	rm -f *.o main
+.PHONY: all clean

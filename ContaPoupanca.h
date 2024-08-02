@@ -4,9 +4,12 @@
 #include "Conta.h"
 
 class ContaPoupanca : public Conta {
+private:
+    double taxaJuros;	
+
 public:
-    ContaPoupanca(int numeroConta);
-    void aplicarJuros(double taxa);
+    ContaPoupanca(int numeroConta, double saldoInicial, double taxaJuros);
+    void aplicarJuros();
 };
 
 #endif // CONTAPOUPANCA_H

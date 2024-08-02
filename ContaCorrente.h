@@ -8,8 +8,8 @@ private:
     double limiteChequeEspecial;
 
 public:
-    ContaCorrente(int numeroConta, double limite);
-    bool sacar(double valor) override;
+    ContaCorrente(int numeroConta, double saldoInicial, double limiteChequeEspecial);
+    bool sacar(double valor, time_t data) override;
 };
 
 #endif // CONTACORRENTE_H

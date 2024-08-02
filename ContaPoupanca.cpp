@@ -1,9 +1,11 @@
 
 #include "ContaPoupanca.h"
 
-ContaPoupanca::ContaPoupanca(int numeroConta) : Conta(numeroConta) {}
+ContaPoupanca::ContaPoupanca(int numeroConta, double saldoInicial, double taxaJuros)
+        : Conta(numeroConta, saldoInicial), taxaJuros(taxaJuros) {}
 
-void ContaPoupanca::aplicarJuros(double taxa) {
-    saldo += saldo * taxa;
-    adicionarTransacao(Transacao("Juros", saldo * taxa));
-}
+void aplicarJuros() {
+        double juros = saldo * taxaJuros;
+        saldo += juros;
+        std::cout << "Juros de R$ " << juros << " aplicados. Novo saldo: R$ " << saldo << "\n";
+    }
