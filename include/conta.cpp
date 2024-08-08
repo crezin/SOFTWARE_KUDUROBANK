@@ -1,4 +1,4 @@
-#include "Conta.h"
+#include "conta.h"
 
 Conta::Conta(int numeroConta, double saldoInicial)
         : numeroConta(numeroConta), saldo(saldoInicial), ativa(true) {}
