@@ -3,25 +3,21 @@
 
 #include <string>
 #include <vector>
-#include "Conta.h"
+#include "conta.h"
 
-
-class Cliente {
+class Cliente{
 private:
     std::string nome;
     std::string cpf;
     std::string endereco;
     std::string numeroTelefone;
-    std::string senha; // Armazena a senha
+    std::string senha;
     std::vector<Conta*> contas;
-    
 
 public:
-    // Adicionando a senha ao construtor
     Cliente(const std::string& nome, const std::string& cpf, const std::string& endereco, const std::string& numeroTelefone, const std::string& senha);
     ~Cliente();
 
-    // Métodos set e get
     void setNome(const std::string& nome);
     void setCpf(const std::string& cpf);
     void setEndereco(const std::string& endereco);
@@ -34,18 +30,12 @@ public:
     std::string getNumeroTelefone() const;
     std::string getSenha() const;
 
-    // Métodos adicionais
     void adicionarConta(Conta* conta);
-    void mostrarMenu();
-    bool autenticarCliente(const std::string& numeroTelefone, const std::string& senha) {
-	void operarConta(Conta* conta);
-	void selecionarContaEOperar(Cliente& cliente);
-	void extrato(time_t dataInicial) const;
-}
-
-
+    void mostrarMenu() const;
+    bool autenticarCliente(const std::string& numeroTelefone, const std::string& senha) const;
+    void operarConta(Conta* conta);
+    void selecionarContaEOperar();
+    void extrato(time_t dataInicial) const;
 };
-
-
 
 #endif // CLIENTE_H
