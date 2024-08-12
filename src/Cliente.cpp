@@ -1,63 +1,138 @@
-#include "Cliente.h"
-#include <iostream>
-#include <sstream>
 #include <iomanip>
 #include <stdexcept>
 #include "Excessões.cpp"
 #include <limits>  // Para std::numeric_limits
 #include <map> 
-
+#include "Cliente.h"
+#include <iostream>
+#include <sstream>
+/**
+ * Construtor da classe Cliente.
+ * Inicializa um cliente com nome, CPF, endereço, número de telefone e senha.
+ *
+ * @param nome O nome do cliente.
+ * @param cpf O CPF do cliente.
+ * @param endereco O endereço do cliente.
+ * @param numeroTelefone O número de telefone do cliente.
+ * @param senha A senha do cliente.
+ */
 Cliente::Cliente(const std::string& nome, const std::string& cpf, const std::string& endereco, const std::string& numeroTelefone, const std::string& senha)
     : nome(nome), cpf(cpf), endereco(endereco), numeroTelefone(numeroTelefone), senha(senha) {}
 
+/**
+ * Define o nome do cliente.
+ *
+ * @param nome O novo nome do cliente.
+ */
 void Cliente::setNome(const std::string& nome) {
     this->nome = nome;
 }
 
+/**
+ * Define o CPF do cliente.
+ *
+ * @param cpf O novo CPF do cliente.
+ */
 void Cliente::setCpf(const std::string& cpf) {
     this->cpf = cpf;
 }
 
+/**
+ * Define o endereço do cliente.
+ *
+ * @param endereco O novo endereço do cliente.
+ */
 void Cliente::setEndereco(const std::string& endereco) {
     this->endereco = endereco;
 }
 
+/**
+ * Define o número de telefone do cliente.
+ *
+ * @param numeroTelefone O novo número de telefone do cliente.
+ */
 void Cliente::setNumeroTelefone(const std::string& numeroTelefone) {
     this->numeroTelefone = numeroTelefone;
 }
 
+/**
+ * Define a senha do cliente.
+ *
+ * @param senha A nova senha do cliente.
+ */
 void Cliente::setSenha(const std::string& senha) {
     this->senha = senha;
 }
 
+/**
+ * Obtém o nome do cliente.
+ *
+ * @return O nome do cliente.
+ */
 std::string Cliente::getNome() const {
     return nome;
 }
 
+/**
+ * Obtém o CPF do cliente.
+ *
+ * @return O CPF do cliente.
+ */
 std::string Cliente::getCpf() const {
     return cpf;
 }
 
+/**
+ * Obtém o endereço do cliente.
+ *
+ * @return O endereço do cliente.
+ */
 std::string Cliente::getEndereco() const {
     return endereco;
 }
 
+/**
+ * Obtém o número de telefone do cliente.
+ *
+ * @return O número de telefone do cliente.
+ */
 std::string Cliente::getNumeroTelefone() const {
     return numeroTelefone;
 }
 
+/**
+ * Obtém a senha do cliente.
+ *
+ * @return A senha do cliente.
+ */
 std::string Cliente::getSenha() const {
     return senha;
 }
 
+/**
+ * Obtém as contas do cliente.
+ *
+ * @return Um vetor de smart pointers para as contas do cliente.
+ */
 std::vector<std::shared_ptr<Conta>>& Cliente::getContas() {
     return this->contas;
 }
 
+/**
+ * Adiciona uma nova conta ao cliente.
+ *
+ * @param conta A nova conta a ser adicionada ao cliente.
+ */
 void Cliente::adicionarConta(std::shared_ptr<Conta> conta) {
     contas.push_back(conta);
 }
 
+/**
+ * Permite ao cliente operar em uma conta específica, realizando operações como depósito, saque, transferência, etc.
+ *
+ * @param conta A conta em que o cliente deseja operar.
+ * @param clientes Um map que contém todos os clientes, necessário para operações como transferência.
+ */
 void Cliente::operarConta(std::shared_ptr<Conta> conta, std::map<std::string, std::shared_ptr<Cliente>>& clientes) {
     int opcao;
     do {
@@ -115,7 +190,7 @@ void Cliente::operarConta(std::shared_ptr<Conta> conta, std::map<std::string, st
                 }
                 case 3: {
                     realizarTransferencia(clientes);
-                break;
+                    break;
                 }
                 case 4: {
                     std::cout << "Saldo atual: R$ " << conta->getSaldo() << "\n";
@@ -145,7 +220,7 @@ void Cliente::operarConta(std::shared_ptr<Conta> conta, std::map<std::string, st
                     std::cout << "Opção inválida. Tente novamente.\n";
                     break;
             }
-        } catch (const ValorInvalidoException& e) {  // Verifique a sintaxe e inclua as exceções personalizadas corretamente
+        } catch (const ValorInvalidoException& e) {
             std::cerr << "Erro: " << e.what() << std::endl;
         } catch (const ContaInativaException& e) {
             std::cerr << "Erro: " << e.what() << std::endl;
@@ -157,7 +232,11 @@ void Cliente::operarConta(std::shared_ptr<Conta> conta, std::map<std::string, st
     } while (opcao != 7);
 }
 
-
+/**
+ * Permite ao cliente selecionar uma de suas contas para operar.
+ *
+ * @param clientes Um map que contém todos os clientes, necessário para operações como transferência.
+ */
 void Cliente::selecionarContaEOperar(std::map<std::string, std::shared_ptr<Cliente>>& clientes) {
     std::cout << "Contas disponíveis:\n";
     for (size_t i = 0; i < contas.size(); ++i) {
@@ -175,7 +254,11 @@ void Cliente::selecionarContaEOperar(std::map<std::string, std::shared_ptr<Clien
     }
 }
 
-
+/**
+ * Exibe o extrato das transações realizadas nas contas do cliente a partir de uma data específica.
+ *
+ * @param dataInicial A data inicial para filtrar as transações a serem exibidas no extrato.
+ */
 void Cliente::extrato(time_t dataInicial) const {
     for (const auto& conta : contas) {
         std::cout << "Extrato da conta: " << conta->getNumeroConta() << std::endl;
@@ -190,6 +273,11 @@ void Cliente::extrato(time_t dataInicial) const {
     }
 }
 
+/**
+ * Realiza uma transferência de uma conta do cliente para uma conta de outro cliente.
+ *
+ * @param clientes Um map que contém todos os clientes, necessário para localizar o destinatário da transferência.
+ */
 void Cliente::realizarTransferencia(std::map<std::string, std::shared_ptr<Cliente>>& clientes) {
     std::string cpfDestino;
     int numeroContaDestino;
@@ -238,7 +326,6 @@ void Cliente::realizarTransferencia(std::map<std::string, std::shared_ptr<Client
     time_t data = std::mktime(&tm);
     
     std::cout << "Valor inserido para transferência: " << valor << std::endl;
-
 
     if (!contas.empty()) {
         std::shared_ptr<Conta> contaSelecionada = contas.front();  // Exemplo de seleção de conta

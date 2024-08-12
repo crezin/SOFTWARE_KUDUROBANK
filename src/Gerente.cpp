@@ -8,15 +8,35 @@
 #include <fstream>
 #include <sstream>
 
+/**
+ * @brief Construtor da classe Gerente.
+ * 
+ * @param senha A senha do gerente.
+ * @param clientes Referência ao mapa de clientes gerenciados pelo gerente.
+ */
 Gerente::Gerente(const std::string& senha, std::map<std::string, std::shared_ptr<Cliente>>& clientes)
     : senha(senha), clientes(clientes) {}
 
+/**
+ * @brief Cadastra um novo cliente no sistema.
+ * 
+ * @param nome O nome do cliente.
+ * @param cpf O CPF do cliente.
+ * @param endereco O endereço do cliente.
+ * @param numeroTelefone O número de telefone do cliente.
+ * @param senha A senha do cliente.
+ */
 void Gerente::cadastrarCliente(const std::string& nome, const std::string& cpf, const std::string& endereco, const std::string& numeroTelefone, const std::string& senha) {
     clientes[cpf] = std::make_shared<Cliente>(nome, cpf, endereco, numeroTelefone, senha);
 }
 
-
-
+/**
+ * @brief Abre uma nova conta corrente para um cliente existente.
+ * 
+ * @param cpf O CPF do cliente que receberá a conta corrente.
+ * @param saldoInicial O saldo inicial da conta corrente.
+ * @param limiteChequeEspecial O limite de cheque especial da conta corrente.
+ */
 void Gerente::abrirContaCorrente(const std::string& cpf, double saldoInicial, double limiteChequeEspecial) {
     auto it = clientes.find(cpf);
     if (it != clientes.end()) {
@@ -29,16 +49,19 @@ void Gerente::abrirContaCorrente(const std::string& cpf, double saldoInicial, do
             std::cout << "Conta Corrente criada, mas sem transações registradas.\n";
         }
 
-        // Adicione uma mensagem de depuração aqui
         std::cout << "Finalizando abertura de conta corrente. Fluxo continua.\n";
     } else {
         std::cout << "Cliente não encontrado.\n";
     }
 }
 
-
-
-
+/**
+ * @brief Abre uma nova conta poupança para um cliente existente.
+ * 
+ * @param cpf O CPF do cliente que receberá a conta poupança.
+ * @param saldoInicial O saldo inicial da conta poupança.
+ * @param taxaJuros A taxa de juros da conta poupança.
+ */
 void Gerente::abrirContaPoupanca(const std::string& cpf, double saldoInicial, double taxaJuros) {
     auto it = clientes.find(cpf);
     if (it != clientes.end()) {
@@ -51,17 +74,25 @@ void Gerente::abrirContaPoupanca(const std::string& cpf, double saldoInicial, do
             std::cout << "Conta Poupança criada, mas sem transações registradas.\n";
         }
 
-        // Adicione uma mensagem de depuração aqui
         std::cout << "Finalizando abertura de conta poupança. Fluxo continua.\n";
     } else {
         std::cout << "Cliente não encontrado.\n";
     }
 }
 
+/**
+ * @brief Autentica o gerente com base na senha fornecida.
+ * 
+ * @param senha A senha fornecida para autenticação.
+ * @return True se a senha estiver correta, false caso contrário.
+ */
 bool Gerente::autenticarGerente(const std::string& senha) const {
     return this->senha == senha;
 }
 
+/**
+ * @brief Permite que o gerente realize várias operações como gerenciar clientes e contas.
+ */
 void Gerente::operarComoGerente() {
     int opcao;
     do {
@@ -163,7 +194,12 @@ void Gerente::operarComoGerente() {
         }
     } while (opcao != 7);
 }
- 
+
+/**
+ * @brief Torna uma conta inativa, impedindo novas operações.
+ * 
+ * @param numeroConta O número da conta a ser desativada.
+ */
 void Gerente::tornarContaInativa(int numeroConta) {
     for (auto& cliente_pair : clientes) {
         std::shared_ptr<Cliente> cliente_local = cliente_pair.second;
@@ -178,6 +214,11 @@ void Gerente::tornarContaInativa(int numeroConta) {
     std::cout << "Conta " << numeroConta << " não encontrada.\n";
 }
 
+/**
+ * @brief Exclui um cliente do sistema, desde que ele não tenha contas ativas.
+ * 
+ * @param cpf O CPF do cliente a ser excluído.
+ */
 void Gerente::excluirCliente(const std::string& cpf) {
     auto it = clientes.find(cpf);
     if (it != clientes.end()) {
@@ -192,6 +233,11 @@ void Gerente::excluirCliente(const std::string& cpf) {
     }
 }
 
+/**
+ * @brief Permite ao gerente editar os dados de um cliente existente.
+ * 
+ * @param cpf O CPF do cliente cujos dados serão editados.
+ */
 void Gerente::editarDadosCliente(const std::string& cpf) {
     auto it = clientes.find(cpf);
     if (it != clientes.end()) {
@@ -237,6 +283,12 @@ void Gerente::editarDadosCliente(const std::string& cpf) {
     }
 }
 
+/**
+ * @brief Carrega os dados dos clientes e contas de arquivos.
+ * 
+ * @param arquivoClientes O caminho do arquivo que contém os dados dos clientes.
+ * @param arquivoContas O caminho do arquivo que contém os dados das contas.
+ */
 void Gerente::carregarClientes(const std::string& arquivoClientes, const std::string& arquivoContas) {
     std::ifstream inClientes(arquivoClientes);
     std::ifstream inContas(arquivoContas);
@@ -293,6 +345,12 @@ void Gerente::carregarClientes(const std::string& arquivoClientes, const std::st
     std::cout << "Dados carregados com sucesso!" << std::endl;
 }
 
+/**
+ * @brief Salva os dados dos clientes e contas em arquivos.
+ * 
+ * @param arquivoClientes O caminho do arquivo onde os dados dos clientes serão salvos.
+ * @param arquivoContas O caminho do arquivo onde os dados das contas serão salvos.
+ */
 void Gerente::salvarClientes(const std::string& arquivoClientes, const std::string& arquivoContas) {
     std::cout << "Salvando dados nos arquivos " << arquivoClientes << " e " << arquivoContas << "..." << std::endl;
 
@@ -342,5 +400,4 @@ void Gerente::salvarClientes(const std::string& arquivoClientes, const std::stri
     std::cout << "Dados salvos com sucesso!" << std::endl;
 }
 
-	
 
