@@ -9,8 +9,11 @@ private:
 
 public:
     ContaCorrente(int numeroConta, double saldoInicial, double limiteChequeEspecial);
-    bool sacar(double valor, time_t data) override;
+    bool sacar(double valor, time_t data) override;  // Tipo de retorno compatível com a classe base	
+	double getLimiteChequeEspecial() const;   
 };
 
 #endif // CONTACORRENTE_H
+
+
 

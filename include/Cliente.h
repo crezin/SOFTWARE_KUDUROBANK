@@ -3,9 +3,10 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 #include "Conta.h"
+#include <limits>
 #include <map>
-#include "Transacao.h"
 
 class Cliente {
 protected:
@@ -14,14 +15,12 @@ protected:
     std::string endereco;
     std::string numeroTelefone;
     std::string senha;
-    std::vector<Conta*> contas;
-    std::map<std::string, Cliente> clientes;
+    std::vector<std::shared_ptr<Conta>> contas;  // Usando smart pointers para contas
 
 public:
-	Cliente()
-        : nome(""), cpf(""), endereco(""), numeroTelefone(""), senha("") {}
+    Cliente() : nome(""), cpf(""), endereco(""), numeroTelefone(""), senha("") {}
     Cliente(const std::string& nome, const std::string& cpf, const std::string& endereco, const std::string& numeroTelefone, const std::string& senha);
-    ~Cliente();
+    virtual ~Cliente() = default;  // Smart pointers cuidam da desalocação de memória
 
     void setNome(const std::string& nome);
     void setCpf(const std::string& cpf);
@@ -34,16 +33,14 @@ public:
     std::string getEndereco() const;
     std::string getNumeroTelefone() const;
     std::string getSenha() const;
-    std::vector<Conta*>& getContas();
-    
+    std::vector<std::shared_ptr<Conta>>& getContas();
 
-	void operarConta(Conta* conta);
-    void adicionarConta(Conta* conta);
+    void operarConta(std::shared_ptr<Conta> conta, std::map<std::string, std::shared_ptr<Cliente>>& clientes);
+    void adicionarConta(std::shared_ptr<Conta> conta);
     bool autenticarCliente(const std::string& numeroTelefone, const std::string& senha) const;
-    void selecionarContaEOperar();
-    void extrato(time_t dataInicial) const; // Função const para indicar que não altera o estado do objeto
-
-    friend bool autenticarCliente(const std::map<std::string, Cliente>& clientes, const std::string& numeroTelefone, const std::string& senha);
+    void selecionarContaEOperar(std::map<std::string, std::shared_ptr<Cliente>>& clientes);
+    void extrato(time_t dataInicial) const;
+    void realizarTransferencia(std::map<std::string, std::shared_ptr<Cliente>>& clientes);
 };
 
 #endif // CLIENTE_H

@@ -10,6 +10,7 @@ private:
 public:
     ContaPoupanca(int numeroConta, double saldoInicial, double taxaJuros);
     void aplicarJuros();
+    double getTaxaJuros() const;
 };
 
 #endif // CONTAPOUPANCA_H

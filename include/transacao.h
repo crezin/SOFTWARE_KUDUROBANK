@@ -3,6 +3,9 @@
 
 #include <string>
 #include <ctime>
+#include <iomanip>
+#include <sstream>
+#include <stdexcept>
 
 class Transacao {
 private:
@@ -15,6 +18,7 @@ public:
     std::string getTipo() const;
     double getValor() const;
     std::time_t getData() const;
+    std::string getDataString() const;  // Adicionando um método para obter a data formatada como string
 };
 
 #endif // TRANSACAO_H

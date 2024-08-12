@@ -1,41 +1,31 @@
-# Definindo o compilador
+# Compilador e flags
 CXX = g++
-CXXFLAGS = -Wall -std=c++17
+CXXFLAGS = -Wall -std=c++17 -Iinclude
 
 # Diretórios
 SRCDIR = src
 INCDIR = include
+OBJDIR = obj
 BINDIR = bin
 
-# Detectando automaticamente todos os arquivos .cpp e .h
+# Arquivos fonte e objetos
 SOURCES = $(wildcard $(SRCDIR)/*.cpp)
-HEADERS = $(wildcard $(INCDIR)/*.h)
-
-# Arquivos objeto gerados
-OBJECTS = $(SOURCES:$(SRCDIR)/%.cpp=$(BINDIR)/%.o)
+OBJECTS = $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
 
 # Nome do executável
-EXECUTABLE = $(BINDIR)/programa
+EXECUTABLE = $(BINDIR)/programa.exe
 
 # Regras
 all: $(EXECUTABLE)
 
-# Regra para criar o executável
 $(EXECUTABLE): $(OBJECTS)
-	@echo "Linking..."
-	$(CXX) $(CXXFLAGS) -o $@ $^
-	@echo "Build successful!"
+	if not exist $(BINDIR) mkdir $(BINDIR)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJECTS)
 
-# Regra para compilar arquivos .cpp para .o
-$(BINDIR)/%.o: $(SRCDIR)/%.cpp $(HEADERS) | $(BINDIR)
-	@echo "Compiling $<..."
-	$(CXX) $(CXXFLAGS) -I$(INCDIR) -c $< -o $@
-	@echo "Compiled $< into $@"
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	if not exist $(OBJDIR) mkdir $(OBJDIR)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Regra para criar o diretório bin
-$(BINDIR):
-	mkdir -p $(BINDIR)
-
-# Limpar os arquivos objeto e o executável
 clean:
-	rm -f $(OBJECTS) $(EXECUTABLE)
+	if exist $(OBJDIR) del /Q $(OBJDIR)\*.o 2>nul
+	if exist $(BINDIR) del /Q $(BINDIR)\programa.exe 2>nul

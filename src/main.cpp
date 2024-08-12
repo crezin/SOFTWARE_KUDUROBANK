@@ -1,72 +1,66 @@
 #include <iostream>
-#include <vector>
-#include <string>
 #include <map>
-#include <ctime>
-#include <iomanip>
-#include <sstream>
 #include <memory>
-#include "Transacao.h"
-#include "Conta.h"
-#include "ContaCorrente.h"
-#include "ContaPoupanca.h"
+#include <fstream> 
 #include "Cliente.h"
 #include "Gerente.h"
+#include "ContaCorrente.h"
+#include "ContaPoupanca.h"
 
+int main() {
+    std::map<std::string, std::shared_ptr<Cliente>> clientes;
+    Gerente gerente("admin", clientes);
 
-bool autenticarCliente(const std::map<std::string, Cliente>& clientes, const std::string& numeroTelefone, const std::string& senha) {
-    auto it = clientes.find(numeroTelefone);
-    if (it != clientes.end() && it->second.autenticarCliente(numeroTelefone, senha)) {
-        return true;
-    }
-    return false;
-}
+    // Carregar os dados no início
+    gerente.carregarClientes("clientes.txt", "contas.txt");
 
-bool autenticarGerente(const std::string& senha, Gerente* gerente) {
-    return gerente->autenticarGerente(senha);
-}
+    while (true) {  // Loop principal para interagir com o usuário
+        std::cout << "=== Sistema Bancário ===\n";
+        std::cout << "1. Login como Gerente\n";
+        std::cout << "2. Login como Cliente\n";
+        std::cout << "3. Sair\n";
+        std::cout << "Escolha uma opção: ";
+        int opcao;
+        std::cin >> opcao;
 
+        if (opcao == 1) {
+            std::string senha;
+            std::cout << "Digite a senha do gerente: ";
+            std::cin >> senha;
 
-void operarComoGerente(Gerente& gerente) {
-    gerente.operarComoGerente();
-}
+            if (gerente.autenticarGerente(senha)) {
+                std::cout << "Login bem-sucedido!\n";
+                gerente.operarComoGerente();
+            } else {
+                std::cout << "Senha incorreta.\n";
+            }
+        } else if (opcao == 2) {
+            std::string cpf, senha;
+            std::cout << "Digite seu CPF: ";
+            std::cin >> cpf;
+            std::cout << "Digite sua senha: ";
+            std::cin >> senha;
 
-    int main() {
-    std::map<std::string, Cliente> clientes;
-    Gerente* gerente = new Gerente("Gerente", "000.000.000-00", "Endereco Gerente", "0000-0000", "senha_gerente", clientes);
-
-    std::string tipoUsuario;
-    std::cout << "Você deseja fazer login como 'gerente' ou 'cliente'?: ";
-    std::cin >> tipoUsuario;
-
-    if (tipoUsuario == "gerente") {
-        std::string senhaGerente;
-        std::cout << "Digite a senha do gerente: ";
-        std::cin >> senhaGerente;
-        if (autenticarGerente(senhaGerente, gerente)) { // Passa o ponteiro gerente
-            operarComoGerente(*gerente);
+            auto it = clientes.find(cpf);
+            if (it != clientes.end() && it->second->getSenha() == senha) {
+                std::cout << "Login bem-sucedido!\n";
+                it->second->selecionarContaEOperar(clientes);  // Passa o map de clientes
+            } else {
+                std::cout << "CPF ou senha incorretos.\n";
+            }
+        } else if (opcao == 3) {
+            std::cout << "Saindo...\n";
+            break;
         } else {
-            std::cout << "Senha do gerente incorreta.\n";
+            std::cout << "Opção inválida. Tente novamente.\n";
         }
-    } else if (tipoUsuario == "cliente") {
-        std::string numeroTelefone, senha;
-        std::cout << "Digite o número de telefone: ";
-        std::cin >> numeroTelefone;
-        std::cout << "Digite a senha: ";
-        std::cin >> senha;
-
-        auto it = clientes.find(numeroTelefone);
-        if (it != clientes.end() && autenticarCliente(clientes, numeroTelefone, senha)) {
-            it->second.selecionarContaEOperar();
-        } else {
-            std::cout << "Autenticação falhou. Número de telefone ou senha incorretos.\n";
-        }
-    } else {
-        std::cout << "Tipo de usuário inválido.\n";
     }
 
-    delete gerente; // Libera a memória alocada para gerente
+    // Salvar os dados antes de sair
+    gerente.salvarClientes("clientes.txt", "contas.txt");
+
     return 0;
 }
+
 
 
